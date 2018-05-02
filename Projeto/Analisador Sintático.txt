@@ -1,0 +1,119 @@
+class Simbolo // qualquer coisa que o usuário pode declarar
+{
+public:
+	typedef enum
+	{
+		VARIAVEL,
+		PROCEDIMENTO,
+		FUNCAO,
+		PARAMETRO
+	}Tipo;
+
+	// TRANSFORMAR ESSAS STRUCTS EM CLASSES
+	typedef struct
+	{
+		//...
+	}DadosDeVariavel;
+
+	typedef struct
+	{
+		//...
+		//lista ou vetor de dados de parâmetro
+		getQuantidadeParametros ();
+		getTipoParametro (int i);
+	}DadosDeProcedimento;
+
+	typedef struct
+	{
+		//...
+		//lista ou vetor de dados de parâmetro
+		getQuantidadeParametros ();
+		getTipoParametro (int i);
+		getTipoDeRetorno (); // não precisa de setters pq 
+	}DadosDeFuncao;
+
+	typedef struct
+	{
+		//...
+	}DadosDeParametro;
+	// PORQUE O MALIGNO NÃO SABE ORIENTAÇÃO A OBJETOS
+	// uma possível solução seria criar uma superclasse de qual todas as acima herdam e na hora da construção inicializamos como uma delas
+	// ex.:
+	// X* ptr;
+
+	typedef union
+	{
+		DadosDeVariavel deVariavel;
+		DadosDeProcedimento deProcedimento;
+		DadosDeFuncao deFuncao;
+		DadosDeParametro deParametro;
+	}Dados;
+
+	private:
+		Tipo tipo;
+		Dados dados;
+		string Nome; // e demais dados comuns serão declarados aqui
+		unsigned char nivel;   // global - 0; procedimento global - 1; tudo dentro do procedimento global - 2 e etc...
+};
+
+Program prog; // 0
+Var a, b, c : integer; // 0
+Procedure Proc1; // 0
+	Var d, e : integer; // 1
+	Procedure Proc2; // 1
+		Var f, g : integer; // 2
+		Begin // 2
+			//... // 3
+		End; // 2
+	Begin // 1
+		//... // 2
+	End;  // 1
+Begin // 0
+	//... // 1
+End. // 0
+
+
+class TabelaDeSimbolos // armazena todas as declarações dé símbolos - por meio de qualquer estrutura de dados
+{
+	// Construir métodos para a inserção e exclusão de símbolos
+	// A exclusão ocorre, por exemplo, quando saímos de um procedimento e apagamos suas variáveis locais
+	// Para tal, podemos construir um método eliminaNivel
+	bool existe();
+};
+
+// POSSÍVEL IMPLEMENTAÇÃO:
+
+typedef enum
+{
+	inteiro;
+	booleano
+}Tipo;
+
+class Simbolo
+{
+private:
+	string nome;
+	unsigned char nivel;
+}
+
+class Parametro : public Simbolo
+{
+private:
+	Tipo tipo;
+	//...
+}
+
+class Variavel : public Simbolo
+{
+	//...
+}
+
+class Procedimento : public Simbolo
+{
+	//...
+}
+
+class Funcao : public Simbolo
+{
+	//...
+}

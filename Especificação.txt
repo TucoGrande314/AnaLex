@@ -1,0 +1,64 @@
+Montar um analisador léxico de um programa
+Identifica pedacinhos de um programa
+pedacinhos - palavras reservadas, comandos de repetição, operadores comparacionais, operadores lógicos, atribuição, entre outros
+Para identificar os pedacinhos, sugere-se montar um vetor de string com os identificadores (os pedacinhos identificados acima)
+	-> Montar um typedef enum com todos os nomes dos possíveis pedacinhos
+		-> Dentro desse typedef ter um valor número
+2 vetores - 1 de string e 1 que mantém os nomes presentes no enumerado (exceto identificador e número, pq eles são imprevisiveis, quando nos depararmos com um desses, ver a classe p/ referência) - os 2 vetores ter que coincidir
+Fazer uma classe AnalisadorLexico que recebe no construtor o nome de um arquivo
+	-> Método ProximoPedaco -> Retorna o enum
+	-> Método TemMaisPedacos
+Espaços, enters '\n', tabs '\t' e EOF devem ser ignorados, serão separadores
+Se achar um caracter alfanumérico, armazenar e continuar lendo para depois tentar identificar
+	-> A leitura acaba quando identificarmos um separador OU um símbolo
+		-> Basicamente um valor não alfanumérico 
+Analisador léxico de Pascal (ou semelhante, como Java ou até mesmo sua própria linguagem)
+Só aceita variáveis int e boolean
+Não terá vetores, matrizes
+Terá procedimentos, funções etc...
+incluindo procedimentos dentro de procedimento
+
+typedef enum {
+	programa,
+	variavel,
+	comeco,
+	...
+	identificador, // alfanumérico, começa com letra
+	numero, // alfanumérico, iniciado por digito e só contém dígitos
+	desconhecido // todo o resto
+} TipoPedaco;
+
+class AnalisadorLexico
+{
+	AnalisadorLexico (char* nomArq);
+	TipoPedaco proximoPedaco ();
+	char temMaisPedacos ();
+	char* getNome (); // só pode ser chamado depois de ncontrar um identificador ou um desconhecido, senão lança exceção
+	int getValor (); // mesma coisa, mas com número
+}
+
+Vetor 1 - String
++-----------+-------+---------+--------+---------+----
+| "program" | "var" | "begin" | "read" | "write" |...
++-----------+-------+---------+--------+---------+----
+
+Funções outras que não read e write devem ser tratados como identificadores.
+
+"Vetor" 2 - Enum
++----------+----------+--------+-----
+| programa | variavel | comeco | ...
++----------+----------+--------+-----
+
+Limitações do identificador léxico
+	-> Tipos - só integer e boolean
+	-> Loop - só while
+	-> Condicional - só if
+
+Program prog;
+
+var a1, a2: integer;
+Begin
+	a1 := 321;
+	a2 := 789;
+	write (a1 + a2);
+end.

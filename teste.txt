@@ -1,0 +1,19 @@
+program Programa;
+
+procedure fib (n:integer;c:boolean);
+var
+	a, b: integer;
+begin
+	a := 0;
+	b := 1;
+	#while n < 0
+	#begin
+		#write(b);
+		b := a + b;
+		a := b;
+	#end;
+end;
+
+begin
+	fib(10);
+end.

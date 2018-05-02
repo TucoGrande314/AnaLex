@@ -1,0 +1,4 @@
+program Programa;
+var
+	a, b : boolean;
+	c, d, e : integer;

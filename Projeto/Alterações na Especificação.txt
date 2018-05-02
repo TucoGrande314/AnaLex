@@ -1,0 +1,249 @@
+class AnaLex
+{
+public:
+	2 métodos, um que "consome" e outro que não.
+	O que consome avança o índice,enquanto o que não consome somente lê.
+}
+
+class AnalisadorSintatico
+{
+public:
+	void compilaInicioDePrograma;
+	void compilaDeclaracaoDeVariavel();
+	void compilaDeclaracaodeProcedimento();
+	void compilaDeclaracaodeFuncao();
+	void compilaDeclaracaodepp();
+	void compilaDeclaracaodeif();
+	void compilaDeclaracaodeWhile();
+	// ESSES MÉTODOS USEM O CONSUMIR, GARANTINDO QUE APÓS SEU FIM O SÍMBOLO A SER COMPILADO TENHA SIDO COMPILADO PLENAMENTE
+	// LANÇAM ERROS QUANDO ENCONTRAM COISAS INESPERADAS OU NÃO ENCONTRAM COISAS ESPERADAS
+}
+
+AnaLex AL
+AnalisdadorSintatico AS (~~~~);
+A.compilaInicioDePrograma();
+Simbolo prox = Al.semConsumir();
+if (prox == variavel)
+{
+	AS.compilaDeclaracaoDeVariavel();
+	prox = AL.semConsumir();
+}
+boolean fim = false;
+do // TODOS OS PROCEDIMENTOS E FUNÇÕES PRECEDEM O PROGRAMA PRINCIPAL
+{
+	switch (prox)
+	{
+		case procedimento: AS.compilaDeclaracaoDeProcedimento(); break;
+		case funcao: AS.compilaDeclaracaoDeFuncao(); break;
+		default : fim = true;
+	}
+	prox = AL.semConsumir();
+} while (!fim);
+AS.compilaProgramaPrincipal();
+
+void AnalisadorSintatico::compilaDeclaracaoDeProgramaPrincipal()
+{
+	compilaComandoComposto() // CONSOME DO BEGIN AO END
+	prox = Al.consumir();
+	if (prox != ponto)
+		erro
+}
+
+void AnalisadorSintatico::compilaDeclaracaoDeProcedimento ()
+{
+	prox = AL.consumir();
+	if (prox != procedimento)
+		erro
+	prox = AL.consumir();
+	if (prox != identificador)
+		erro
+	// POR COISAS NA TABELA DE SÍMBOLOS
+	// CUIDAR DOS PARAMETROS
+	prox = AL.consumir();
+	if (prox != pontoEVirgula)
+		erro
+	prox = AL.semConsumir()
+	if (prox == variavel)
+		AS.compilaDeclaracaoDeVariavel();
+	boolean fim = false;
+	while (!fim) // TODOS OS PROCEDIMENTOS E FUNÇÕES PRECEDEM O PROGRAMA PRINCIPAL
+	{
+		switch (prox)
+		{
+			case procedimento: AS.compilaDeclaracaoDeProcedimento(); break;
+			case funcao: AS.compilaDeclaracaoDeFuncao(); break;
+			default : fim = true;
+		}
+		prox = AL.semConsumir();
+	}
+	AS.compilaComandoComposto();
+	prox = AL.consumir();
+	if (prox != pontoEVirgula)
+		erro
+}
+
+void AnalisadorSintatico::compilaComando ()
+{
+	prox = AL.semConsumir();
+	if (prox == identificador)
+	{
+		//achar id na tabela de simbolos
+		if (for id de var)
+			compilaAtribuicao();
+		else
+			if (for id de proc)
+				compilaChamadaDeProc();
+			else
+				erro
+	}
+	else
+	{
+		if (prox == se)
+			AS.compilaSe();
+		else
+			if (prox == enquanto)
+				AS.compilaEnquanto();
+		// ...
+	}
+}
+
+void compilaSe ()
+{
+	prox = AL.consumir();
+	if (prox != se)
+		erro
+	tipo = AS.compilarExpressao();
+	if (tipo != booleano)
+		erro
+	prox = AL.consumir();
+	if (prox == comeco)
+		AS.compilaComandoComposto();
+	else
+		AS.compilaComando();
+	prox = AL.cons();
+	if (prox != pontoEVirgula)
+		erro
+}
+
+void compilaComandoComposto ()
+{
+	prox = AS.consumir();
+	if (prox != inicio)
+		erro
+	while ()
+	{
+		AS.compilaComando()
+	}
+	prox = AL.consumir();
+	if (prox != fim)
+		ERROS
+}
+
+//===================== 2ª Metade da Aula ====================//
+
+void compilaExpressaoAritmetica()
+{
+	compilaTermo();
+	while (AL.semConsumir() == mais || AL.semConsumir() == menos)
+	{
+		prox = AL.consumir();
+		compTermo();
+	}
+}
+
+void compilaTermo ()
+{
+	compFator();
+	while (AL.semConsumir() == vezes || AL.semConsumir() == dividir || AL.semConsumir() == resto)
+	{
+		prox = AL.consumir();
+		compFator();
+	}
+}
+
+void compilaFator ()
+{
+	prox = AL.consumir();
+	if (prox == menos)
+		prox = AL.consumir();
+	if (prox == identificador)
+	{
+		// recupera símbolo da tabela de símbolos com aquele ID
+		if (for funcao && tipo da funcao for inteiro)
+			compilaChamadaDeFuncao();
+		else
+			if (!for variavel || tipo da var ! for inteiro)
+				erro
+	}
+	else
+	{
+		if (prox == abreParenteses)
+		{
+			compilaExpressaoAritmetica();
+			prox = AL.consumir();
+			if (prox != fechaParenteses)
+				erro
+		}
+		else
+			if (prox != numero)
+				erro
+	}
+}
+
+void compilaExpressaoRelacional()
+{
+	compilaExpressaoAritmetica();
+		// DAR UM JEITO DE ACEITAR PARENTESES
+
+	prox = AL.consumir();
+	if (prox != menor && prox != maior && prox != maiorOuIgual && prox != menorOuIgual && prox != diferente)
+		erro
+	compilaExpressaoAritmetica();
+}
+
+void compilaExpressaoLogica () // compila coisas separadas por OU
+{
+	compilaTermoRelacional();
+	while (AL.semConsumir() == OU)
+	{
+		prox = AL.consumir();
+		comparaTermoRelacional();	
+	}
+}
+
+void compilaTermoRelacional () // compila coisas separadas por E
+{
+	compilaFatorRelacional ();
+	while (AL.semConsumir() == E)
+	{
+		prox = AL.consumir();
+		compilaFatorRelacional();
+	}
+}
+
+void compilaFatorRelacional()
+{
+	prox = AL.consumir();
+	if (prox == NAO)
+		prox = AL.consumir();
+	if (prox == identificador)
+	{
+		// recupera simbolo da tabela de símbolos
+		if (for funcao && for bool)
+			compilaChamadaDeFuncao();
+		else
+			if (! for variavel || tipo ! for bool)
+				compilaExpressaoRelacional();
+	}
+	else
+		if (prox == abreParenteses)
+		{
+			compilaExpLogica();
+			prox = AL.consumir();
+			if (prox != fechaParenteses)
+				erro
+		}
+		else
+			if (prox != verdadeiro && prox != falso)
+				erro;
+}
